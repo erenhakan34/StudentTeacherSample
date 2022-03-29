@@ -1,0 +1,42 @@
+-- SampleContext.cs OnModelCreating() içinde her bir mapping için tek tek yazmaya gerek yok aşağıdaki şekilde bir tane eklersen ilgili yerde bulunan tüm mappingleri 
+apply eder.
+
+      builder.ApplyConfigurationsFromAssembly(typeof(LessonMap).Assembly);
+      
+      
+-- DbContext kullanılan yerlerde new ile yaratmak yerine bunu Dependency Injection container'a bırak o yönetsin. Bunu araştır. 
+  Daha doğrusu genel olarak NET Core Dependency Injection'a bak
+  
+   https://okandavut.medium.com/dependency-injection-nedir-asp-net-core-projelerinde-nas%C4%B1l-kullan%C4%B1l%C4%B1r-b18900698708
+   https://hackernoon.com/asp-net-core-how-to-use-dependency-injection-in-entity-framework-core-4388fc5c148b
+  
+-- Genel olarak metod isimlerine dikkat edilmeli. Eylem bildiren isimler kullanılmalı. PassiveData değil de SetDataPassive ve benzeri.
+
+      
+-- Sorguları query syntax yerine metod syntax ile de yazabilirsin o daha okunaklı oluyor.
+
+      https://www.tutorialsteacher.com/linq/linq-method-syntax
+      
+-- Update için context.Entry(getLesson).Property("IsActiveData").IsModified = true;  bu şekilde değil de context üzerinde Update, UpdateAsync metodları var onlardan
+    yararlan.
+    
+-- Property ve metod isimlerinin PascalCase olmasına dikkat edilmeli. C# Naming conventionlara bir göz at
+        https://github.com/ktaranov/naming-convention/blob/master/C%23%20Coding%20Standards%20and%20Naming%20Conventions.md
+      
+      
+ -- Entity sınıflarında ID ler base bir Entity sınıfına alınabilir tekrar tekrar her entity içerisinde yazılmasına gerek yok
+ 
+ -- DbContext'de ekleme yapmak için Add, AddAsync, 
+    Güncelleme yapmak için update, UpdateAsync,
+    Silme için Remove metodları yer alıyor. Bu tür işler için o metodlardan yararlan.
+ 
+ -- Proje yapısı şöyle olabilir:
+      Business > Servisler, Result data, DTO, vs burada yer alsın  >>> Data ve Domain katmanını referans alabilir
+      Data > DbContext, mappingler, repository'ler vs burada yer alsın  >>> Sadece Domain katmanını referans alabilir
+      Domain > Entitylerin burada yer alsın    >>>> Hiç bir katmana referansı olmamalı, Business ve Data katmanı bu katmanı referans alabilir
+      UI > Önyüzle alakalı işler burada yer alsın
+            
+      Bunun için Clean Architecture yaklaşımı var ona da bir bak 
+          https://serkanerip.medium.com/clean-architecture-temiz-mimari-nedir-22961b7d389b
+          https://medium.com/kodcular/clean-architecture-nedir-d5da08bd2f68
+          
